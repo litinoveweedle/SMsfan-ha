@@ -141,6 +141,12 @@ Entity options:
 - `chan_range: "start..end"` (specify inclusive channel range)
 - `update_interval: seconds` (specify the update interval for `sensor` and `binary_sensor`, default 30s)
 
+## Optional capabilities
+
+Select these entities under **Configure**; existing entity selections are unchanged.
+
+Optional entities include `processor_temp_1`, `safety_temp_1`, and `led_blink_1`. These settings are available only on supported Smart Fan hardware revisions; unsupported revisions report an error.
+
 ## Testing
 
 With Python 3.14, install `homeassistant==2026.11.1`,

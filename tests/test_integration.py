@@ -88,9 +88,11 @@ def hardware(hass, monkeypatch):
 
 
 def first_entity():
-    platform = next(iter(SM_MAP))
-    kind = next(iter(SM_MAP[platform]))
-    return platform, kind, f"{kind}_1"
+    for platform, types in SM_MAP.items():
+        for kind, metadata in types.items():
+            if not metadata.get("optional"):
+                return platform, kind, f"{kind}_1"
+    raise AssertionError("No default entity")
 
 
 async def test_yaml_migration_and_configuration(hass, hardware):
@@ -171,6 +173,8 @@ async def test_ui_setup_duplicate_and_unload(hass, hardware):
     assert entity_id is not None
     for entity_platform, types in SM_MAP.items():
         for entity_type, metadata in types.items():
+            if metadata.get("optional"):
+                continue
             for channel in range(1, metadata["chan_no"] + 1):
                 unique_id = f"{entity_platform}.{DOMAIN}1_{entity_type}_{channel}"
                 registered_id = registry.async_get_entity_id(entity_platform, DOMAIN, unique_id)
