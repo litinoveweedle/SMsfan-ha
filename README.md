@@ -7,6 +7,10 @@ seamlessly with Home Assistant, bringing all your custom functionality into the 
 
 ## Installation
 
+> This development version requires `sequent-ha-common==0.0.2`, which must be
+> published before deployment. All installed Sequent integration pins should be
+> updated and tested together.
+
 > If you already have HACS, I2C and File editor configured, you can skip to [The actual installation](#the-actual-installation)
 
 
@@ -42,23 +46,28 @@ seamlessly with Home Assistant, bringing all your custom functionality into the 
     - Repository is `SequentMicrosystems/SMsfan-ha` and type is `Integration`
     - Once added, you can now search it in HACS menu and download it
 
-5. Add SMsfan config in configuration.yaml
-    - In the sidebar, select `File editor` and start the add-on
-    - Click the folder icon from the top left corner and edit `configuration.yaml`
-    - At the end of the file append the SMsfan config:
-        ```yaml
-        SMsfan:
-        ```
-        > for more information, see [configuration.yaml](#configuration.yaml)
-    - Save the file
+5. Restart Home Assistant, then open **Settings > Devices & services**.
+6. Select **Add integration**, choose **Sequent Microsystems Smart Fan Integration**, and enter the
+   card's stack address. Repeat for each card.
+7. Use **Configure** to choose entities and their update intervals.
 
-6. Reboot system
+### Upgrading from `SMsfan`
 
-7. Reboot system (yes, it must be done twice)
+Back up Home Assistant first. Uninstall the old integration and install the
+updated one; Marketplace may require re-adding the repository. Ensure
+`custom_components/SMsfan` is removed and only `custom_components/smsfan`
+remains. Change the top-level `SMsfan:` YAML key to `smsfan:` and restart.
+Existing entity registry entries are migrated to the new domain; conflicting
+entries must be resolved before setup can continue.
 
+## Migrating from YAML
 
+Existing `smsfan:` YAML is imported once. Check the entries under **Settings >
+Devices & services**, remove the YAML section and restart Home Assistant. Later
+YAML edits are not imported, and existing entries are not overwritten. Use the
+integration UI for further changes.
 
-## configuration.yaml
+The legacy examples below are retained for reference:
 
 `configuration.yaml` example:
 ```yaml
@@ -73,27 +82,27 @@ automation: !include automations.yaml
 script: !include scripts.yaml
 scene: !include scenes.yaml
 
-SMsfan:
+smsfan:
     # + optional configs
 ```
 
 - Simple stack 0 config:
 
 ```yaml
-SMsfan:
+smsfan:
 ```
 
 - Specific stack config:
 
 ```yaml
-SMsfan:
+smsfan:
     - stack: 2
 ```
 
 - Multiple cards on different stack levels:
 
 ```yaml
-SMsfan:
+smsfan:
     - stack: 0
     - stack: 2
     - stack: 3
@@ -104,7 +113,7 @@ SMsfan:
 > The following example is provided for illustrative purposes only and does not necessarily represent real entities.
 
 ```yaml
-SMsfan:
+smsfan:
     - stack: 0
       relay_1:
       relay_3:
@@ -131,3 +140,17 @@ power_1: (type: number)
 Entity options:
 - `chan_range: "start..end"` (specify inclusive channel range)
 - `update_interval: seconds` (specify the update interval for `sensor` and `binary_sensor`, default 30s)
+
+## Testing
+
+With Python 3.14, install `homeassistant==2026.11.1`,
+`pytest-homeassistant==2026.11.1`, and the integration requirements from the
+manifest, then run:
+
+```shell
+python -m pytest -p no:respx --asyncio-mode=auto -o asyncio_default_fixture_loop_scope=function tests
+```
+
+Tests simulate hardware and check the installed driver API. CI installs the
+manifest requirements from PyPI. The shared-library release must be published
+before that installation can succeed.

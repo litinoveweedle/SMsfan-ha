@@ -3,7 +3,7 @@ LINK = "https://sequentmicrosystems.com/products/smart-fan-for-raspberry-pi"
 
 import sfan
 API = sfan
-DOMAIN = "SMsfan"
+DOMAIN = "smsfan"
 NAME_PREFIX = "smsf"
 SM_MAP = {
     "number": {
