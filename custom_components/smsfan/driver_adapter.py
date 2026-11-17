@@ -12,7 +12,9 @@ def _check_revision(stack):
     if address < 0:
         raise OSError("Smart Fan card not detected")
     if address > 4:
-        raise ValueError("This Smart Fan hardware revision does not support this feature")
+        raise ValueError(
+            "This Smart Fan hardware revision does not support this feature"
+        )
 
 
 def _check_result(value):
