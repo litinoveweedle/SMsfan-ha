@@ -1,14 +1,15 @@
 {
   "domain": "smsfan",
-  "name": "Sequent Microsystems Smart Fan Integration",
-  "after_dependencies": [],
+  "name": "Sequent Microsystems Smart Fan Card",
+  "categories": [
+    "diy_makers.boards_hardware"
+  ],
   "codeowners": ["@3lv", "@litinoveweedle"],
   "config_flow": true,
-  "dependencies": [],
   "documentation": "https://github.com/SequentMicrosystems/SMsfan-ha",
   "integration_type": "device",
   "iot_class": "local_polling",
-  "issue_tracker": "https://github.com/SequentMicrosystems/SMsfan-ha",
+  "issue_tracker": "https://github.com/SequentMicrosystems/SMsfan-ha/issues",
   "requirements": ["SMsfan>=1.2.0", "SMcommonHA>=0.0.3"],
   "version": "1.0.0"
 }
